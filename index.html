@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doraemon Playlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .season-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .season-tabs button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .season-tabs button.active {
+            border-bottom: 2px solid white;
+        }
+
+        .carousel-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            scroll-behavior: smooth;
+            padding: 10px 0;
+        }
+
+        .episode-card {
+            display: inline-block;
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 10px;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        .episode-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .episode-info h3 {
+            margin: 10px 0 5px;
+            font-size: 16px;
+        }
+
+        .episode-info p {
+            margin: 2px 0;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .watch-btn {
+            color: #ff5722;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .carousel-nav button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="season-title">Doraemon</h1>
+    <div class="season-tabs">
+        <button onclick="changeSeason('season17')" class="active" id="season17-btn">Season 17</button>
+        <button onclick="changeSeason('season18')" id="season18-btn">Season 18</button>
+    </div>
+
+    <div class="carousel-nav">
+        <button onclick="scrollCarousel(-300)">❮</button>
+        <button onclick="scrollCarousel(300)">❯</button>
+    </div>
+
+    <div class="carousel-container" id="episode-list"></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+    function changeSeason(season) {
+        document.getElementById("season-title").innerText = `Doraemon - ${season.replace("season", "Season ")}`;
+
+        document.querySelectorAll('.season-tabs button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`${season}-btn`).classList.add('active');
+
+        const episodeList = document.getElementById("episode-list");
+        episodeList.innerHTML = "";
+
+        episodes[season].forEach(episode => {
+            const episodeElement = document.createElement("div");
+            episodeElement.classList.add("episode-card");
+
+            episodeElement.innerHTML = `
+                <img src="${episode.image}" alt="Episode Image">
+                <div class="episode-info">
+                    <h3>${episode.title}</h3>
+                    <p>${episode.ep_no} • ${episode.date} • ${episode.duration}</p>
+                    <p>${episode.description}</p>
+                    <a href="${episode.watch_url}" class="watch-btn">Watch Now</a>
+                </div>
+            `;
+            episodeList.appendChild(episodeElement);
+        });
+    }
+
+    function scrollCarousel(value) {
+        document.getElementById("episode-list").scrollBy({ left: value, behavior: "smooth" });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        changeSeason('season17');
+    });
+</script>
+</body>
+</html>
