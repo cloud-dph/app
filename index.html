@@ -4,52 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <script defer src="data.js"></script>
-    <script defer src="script.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            background-color: #f4f4f4;
         }
-        .login-container {
-            width: 300px;
+        .container {
+            background: white;
             padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
             text-align: center;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
         }
-        input, button {
+        input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border: none;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
-        }
-        input {
-            background: rgba(255, 255, 255, 0.7);
         }
         button {
-            background-color: blue;
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            border: none;
             color: white;
             cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #218838;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
+
+    <div class="container">
         <h2>Login</h2>
-        <input type="text" id="mobile" placeholder="Enter Mobile Number" oninput="checkMobile()" maxlength="10">
-        <input type="password" id="password" placeholder="Enter Password" style="display: none;">
-        <button onclick="login()">Login</button>
-        <p id="message" style="color: red;"></p>
+        <div id="step1">
+            <input type="text" id="mobile" placeholder="Enter Mobile Number">
+            <button onclick="checkMobile()">Next</button>
+        </div>
+        <div id="step2" style="display: none;">
+            <input type="password" id="password" placeholder="Enter Password">
+            <button onclick="login()">Login</button>
+        </div>
     </div>
+
+    <script>
+        let users = [];
+        let currentUser = null;
+
+        // Check if user is already logged in
+        if (localStorage.getItem("loggedInUser")) {
+            window.location.href = "profile.html";
+        }
+
+        // Fetch user data
+        fetch('https://cloud-dph.github.io/app/data.js')
+            .then(response => response.text())
+            .then(data => {
+                eval(data); // Load the users array
+            })
+            .catch(error => console.error("Error loading user data:", error));
+
+        function checkMobile() {
+            const mobile = document.getElementById("mobile").value;
+            currentUser = users.find(user => user.mobile === mobile);
+            if (currentUser) {
+                document.getElementById("step1").style.display = "none";
+                document.getElementById("step2").style.display = "block";
+            } else {
+                alert("Mobile number not found!");
+            }
+        }
+
+        function login() {
+            const password = document.getElementById("password").value;
+            if (currentUser && currentUser.password === password) {
+                localStorage.setItem("loggedInUser", JSON.stringify(currentUser));
+                window.location.href = "profile.html"; // Redirect to profile page
+            } else {
+                alert("Incorrect password!");
+            }
+        }
+    </script>
+
 </body>
 </html>
