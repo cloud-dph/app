@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <script defer src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .profile-container {
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .profile-image {
+            width: 80px;
+            height: 80px;
+            background-color: blue;
+            color: white;
+            font-size: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            border-radius: 50%;
+        }
+        a {
+            display: block;
+            margin-top: 10px;
+            color: blue;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body onload="getUserData()">
+    <div class="profile-container">
+        <div class="profile-image" id="profileImage"></div>
+        <h2>User Profile</h2>
+        <div id="profileInfo"></div>
+        <a href="logout.html">Logout</a>
+    </div>
+</body>
+</html>
