@@ -1,3 +1,11 @@
+// Auto-login check
+window.onload = function() {
+    const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+    if (loggedInUser && window.location.pathname.includes("index.html")) {
+        window.location.href = "https://abc.xyz";  // Redirect to abc.xyz if already logged in
+    }
+};
+
 // Check mobile number and reveal password field
 function checkMobile() {
     let mobileInput = document.getElementById("mobile");
@@ -21,31 +29,10 @@ function login() {
 
     if (user) {
         sessionStorage.setItem("loggedInUser", JSON.stringify(user));
-        window.location.href = `profile.html?name=${user.name}`;
+        window.location.href = "https://abc.xyz";  // Redirect to abc.xyz
     } else {
         message.innerText = "Invalid credentials!";
     }
-}
-
-// Fetch and display profile data
-function getUserData() {
-    const params = new URLSearchParams(window.location.search);
-    const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
-
-    if (!loggedInUser) {
-        window.location.href = "index.html";
-        return;
-    }
-
-    let output = "";
-    params.forEach((_, key) => {
-        if (loggedInUser[key]) {
-            output += `<p><strong>${key}:</strong> ${loggedInUser[key]}</p>`;
-        }
-    });
-
-    document.getElementById("profileInfo").innerHTML = output;
-    document.getElementById("profileImage").innerText = loggedInUser.fullName.charAt(0);
 }
 
 // Logout function (called in logout.html)
@@ -53,4 +40,3 @@ if (window.location.pathname.includes("logout.html")) {
     sessionStorage.removeItem("loggedInUser");
     window.location.href = "index.html";
 }
-
