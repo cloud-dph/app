@@ -99,6 +99,12 @@
 
     <script src="data.js"></script>
     <script>
+        // Check if user is already logged in
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        if (loggedInUser) {
+            window.location.href = 'Profile.html'; // Redirect to profile if already logged in
+        }
+
         let currentUser = null;
 
         // Step 1: Check Mobile Number
@@ -120,8 +126,8 @@
             const password = document.getElementById('password').value;
 
             if (currentUser && currentUser.password === password) {
-                localStorage.setItem('loggedInUser', JSON.stringify(currentUser));
-                window.location.href = 'https://abc.xyz';
+                localStorage.setItem('loggedInUser', JSON.stringify(currentUser)); // Save user to localStorage
+                window.location.href = 'https://abc.xyz'; // Redirect to external site
             } else {
                 document.getElementById('errorMessage2').textContent = 'Incorrect password';
             }
