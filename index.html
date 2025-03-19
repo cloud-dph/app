@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        /* CSS Styles */
         body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #1f2e3d; /* Blue background */
+            background-color: #1f2e3d;
             color: white;
             display: flex;
             justify-content: center;
@@ -19,7 +18,7 @@
         }
 
         .login-container {
-            background-color: #2c3e50; /* Darker blue container */
+            background-color: #2c3e50;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
@@ -29,16 +28,18 @@
         .input-container {
             display: flex;
             align-items: center;
+            margin-bottom: 20px;
         }
 
         .input-icon {
-            background-color: #34495e; /* Icon background */
+            background-color: #34495e;
             padding: 10px;
             border-radius: 5px 0 0 5px;
             font-size: 18px;
         }
 
-        input[type="text"] {
+        input[type="text"],
+        input[type="password"] {
             padding: 10px;
             border: none;
             border-radius: 0 5px 5px 0;
@@ -46,29 +47,65 @@
             font-size: 16px;
             outline: none;
         }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <!-- Login Container -->
     <div class="login-container">
-        <!-- Input Container -->
+        <h1>Login to watch for free</h1>
         <div class="input-container">
-            <div class="input-icon" id="inputIcon">+91</div> <!-- Default icon for mobile -->
-            <input type="text" id="userInput" placeholder="Mobile number" required>
+            <div class="input-icon" id="inputIcon">+91</div>
+            <input type="text" id="emailOrPhone" placeholder="Mobile number or Email" required>
         </div>
+        <div class="input-container">
+            <input type="password" id="password" placeholder="Password" required>
+        </div>
+        <button id="loginButton">Continue</button>
+        <p class="error" id="errorMessage"></p>
     </div>
 
-    <!-- JavaScript for Dynamic Icon Change -->
+    <script src="data.js"></script>
     <script>
-        document.getElementById('userInput').addEventListener('input', function() {
-            const input = this.value; // Get user input
-            const inputIcon = document.getElementById('inputIcon');
+        document.getElementById('loginButton').addEventListener('click', function() {
+            const emailOrPhone = document.getElementById('emailOrPhone').value;
+            const password = document.getElementById('password').value;
 
-            // If input contains '@', change icon to email
+            const user = users.find(u => u.email === emailOrPhone || u.mobile === emailOrPhone);
+
+            if (user && user.password === password) {
+                localStorage.setItem('loggedInUser', JSON.stringify(user));
+                window.location.href = 'Profile.html';
+            } else {
+                document.getElementById('errorMessage').textContent = 'Invalid credentials';
+            }
+        });
+
+        document.getElementById('emailOrPhone').addEventListener('input', function() {
+            const input = this.value;
+            const inputIcon = document.getElementById('inputIcon');
             if (input.includes('@')) {
                 inputIcon.textContent = '✉️'; // Email icon
             } else {
-                inputIcon.textContent = '+91'; // Default mobile icon
+                inputIcon.textContent = '+91'; // Mobile icon
             }
         });
     </script>
