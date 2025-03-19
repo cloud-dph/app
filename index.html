@@ -3,97 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login demo</title>
+    <title>Login</title>
     <style>
+        /* CSS Styles */
         body {
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
+            background-color: #1f2e3d; /* Blue background */
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
         }
-        .container {
-            background: white;
+
+        .login-container {
+            background-color: #2c3e50; /* Darker blue container */
             padding: 20px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
             width: 300px;
         }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+
+        .input-container {
+            display: flex;
+            align-items: center;
         }
-        button {
-            width: 100%;
+
+        .input-icon {
+            background-color: #34495e; /* Icon background */
             padding: 10px;
-            background: #28a745;
+            border-radius: 5px 0 0 5px;
+            font-size: 18px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
             border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background: #218838;
+            border-radius: 0 5px 5px 0;
+            width: 100%;
+            font-size: 16px;
+            outline: none;
         }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <h2>Login</h2>
-        <div id="step1">
-            <input type="text" id="mobile" placeholder="Enter Mobile Number">
-            <button onclick="checkMobile()">Next</button>
-        </div>
-        <div id="step2" style="display: none;">
-            <input type="password" id="password" placeholder="Enter Password">
-            <button onclick="login()">Login</button>
+    <!-- Login Container -->
+    <div class="login-container">
+        <!-- Input Container -->
+        <div class="input-container">
+            <div class="input-icon" id="inputIcon">+91</div> <!-- Default icon for mobile -->
+            <input type="text" id="userInput" placeholder="Mobile number" required>
         </div>
     </div>
 
+    <!-- JavaScript for Dynamic Icon Change -->
     <script>
-        let users = [];
-        let currentUser = null;
+        document.getElementById('userInput').addEventListener('input', function() {
+            const input = this.value; // Get user input
+            const inputIcon = document.getElementById('inputIcon');
 
-        // Check if user is already logged in
-        if (localStorage.getItem("loggedInUser")) {
-            window.location.href = "profile.html";
-        }
-
-        // Fetch user data
-        fetch('./data.js')
-            .then(response => response.text())
-            .then(data => {
-                eval(data); // Load the users array
-            })
-            .catch(error => console.error("Error loading user data:", error));
-
-        function checkMobile() {
-            const mobile = document.getElementById("mobile").value;
-            currentUser = users.find(user => user.mobile === mobile);
-            if (currentUser) {
-                document.getElementById("step1").style.display = "none";
-                document.getElementById("step2").style.display = "block";
+            // If input contains '@', change icon to email
+            if (input.includes('@')) {
+                inputIcon.textContent = '✉️'; // Email icon
             } else {
-                alert("Mobile number not found!");
+                inputIcon.textContent = '+91'; // Default mobile icon
             }
-        }
-
-        function login() {
-            const password = document.getElementById("password").value;
-            if (currentUser && currentUser.password === password) {
-                localStorage.setItem("loggedInUser", JSON.stringify(currentUser));
-                window.location.href = "profile.html"; // Redirect to profile page
-            } else {
-                alert("Incorrect password!");
-            }
-        }
+        });
     </script>
-
 </body>
 </html>
