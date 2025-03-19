@@ -67,45 +67,63 @@
             color: red;
             margin-top: 10px;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h1>Login to watch for free</h1>
-        <div class="input-container">
-            <div class="input-icon" id="inputIcon">+91</div>
-            <input type="text" id="emailOrPhone" placeholder="Mobile number or Email" required>
+        
+        <!-- Step 1: Mobile Number -->
+        <div id="step1">
+            <div class="input-container">
+                <div class="input-icon">+91</div>
+                <input type="text" id="mobile" placeholder="Mobile number" required>
+            </div>
+            <button id="nextButton">Next</button>
+            <p class="error" id="errorMessage1"></p>
         </div>
-        <div class="input-container">
-            <input type="password" id="password" placeholder="Password" required>
+
+        <!-- Step 2: Password -->
+        <div id="step2" class="hidden">
+            <div class="input-container">
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <button id="loginButton">Login</button>
+            <p class="error" id="errorMessage2"></p>
         </div>
-        <button id="loginButton">Continue</button>
-        <p class="error" id="errorMessage"></p>
     </div>
 
     <script src="data.js"></script>
     <script>
-        document.getElementById('loginButton').addEventListener('click', function() {
-            const emailOrPhone = document.getElementById('emailOrPhone').value;
-            const password = document.getElementById('password').value;
+        let currentUser = null;
 
-            const user = users.find(u => u.email === emailOrPhone || u.mobile === emailOrPhone);
+        // Step 1: Check Mobile Number
+        document.getElementById('nextButton').addEventListener('click', function() {
+            const mobile = document.getElementById('mobile').value;
+            const user = users.find(u => u.mobile === mobile);
 
-            if (user && user.password === password) {
-                localStorage.setItem('loggedInUser', JSON.stringify(user));
-                window.location.href = 'Profile.html';
+            if (user) {
+                currentUser = user;
+                document.getElementById('step1').classList.add('hidden');
+                document.getElementById('step2').classList.remove('hidden');
             } else {
-                document.getElementById('errorMessage').textContent = 'Invalid credentials';
+                document.getElementById('errorMessage1').textContent = 'Mobile number not found';
             }
         });
 
-        document.getElementById('emailOrPhone').addEventListener('input', function() {
-            const input = this.value;
-            const inputIcon = document.getElementById('inputIcon');
-            if (input.includes('@')) {
-                inputIcon.textContent = '✉️'; // Email icon
+        // Step 2: Check Password
+        document.getElementById('loginButton').addEventListener('click', function() {
+            const password = document.getElementById('password').value;
+
+            if (currentUser && currentUser.password === password) {
+                localStorage.setItem('loggedInUser', JSON.stringify(currentUser));
+                window.location.href = 'https://abc.xyz';
             } else {
-                inputIcon.textContent = '+91'; // Mobile icon
+                document.getElementById('errorMessage2').textContent = 'Incorrect password';
             }
         });
     </script>
