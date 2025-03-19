@@ -1,18 +1,16 @@
 const users = [
-    { 
-        name: "Vinayak", 
-        fullName: "Vinayak Sharma", 
-        mobile: "9876543210", 
-        password: "123456", 
-        dob: "1995-05-15", 
-        address: "Delhi, India" 
+    {
+        name: 'John Doe',
+        mobile: '1234567890',
+        email: 'john@example.com',
+        password: 'password123',
+        color: '#FF5733'
     },
-    { 
-        name: "Rahul", 
-        fullName: "Rahul Verma", 
-        mobile: "8765432109", 
-        password: "password123", 
-        dob: "1998-09-25", 
-        address: "Mumbai, India" 
+    {
+        name: 'Jane Doe',
+        mobile: '0987654321',
+        email: 'jane@example.com',
+        password: 'password456',
+        color: '#33FF57'
     }
 ];
