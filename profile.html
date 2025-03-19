@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1f2e3d;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .profile-container {
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+
         .profile-icon {
             width: 100px;
             height: 100px;
@@ -12,21 +32,44 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 20px;
+        }
+
+        .profile-details p {
+            margin: 10px 0;
+        }
+
+        .logout-button {
+            background-color: #3498db;
             color: white;
-            font-size: 24px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .logout-button:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
 <body>
-    <h1>Profile</h1>
-    <div id="profileIcon" class="profile-icon"></div>
-    <p>Name: <span id="profileName"></span></p>
-    <p>Email: <span id="profileEmail"></span></p>
-    <p>Mobile: <span id="profileMobile"></span></p>
-    <a href="logout.html">Logout</a>
+    <div class="profile-container">
+        <div class="profile-icon" id="profileIcon"></div>
+        <div class="profile-details">
+            <p>Name: <span id="profileName"></span></p>
+            <p>Email: <span id="profileEmail"></span></p>
+            <p>Mobile: <span id="profileMobile"></span></p>
+        </div>
+        <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
 
     <script>
         const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
         if (!loggedInUser) {
             window.location.href = 'index.html';
         } else {
@@ -35,8 +78,13 @@
             document.getElementById('profileMobile').textContent = loggedInUser.mobile;
 
             const profileIcon = document.getElementById('profileIcon');
-            profileIcon.style.backgroundColor = loggedInUser.color || '#000';
+            profileIcon.style.backgroundColor = loggedInUser.color;
             profileIcon.textContent = loggedInUser.name.charAt(0).toUpperCase();
+        }
+
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'index.html';
         }
     </script>
 </body>
