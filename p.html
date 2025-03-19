@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Video System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #container {
+            position: relative;
+            width: 80%;
+            height: 500px;
+            margin: 20px auto;
+            overflow: hidden;
+            border: 2px solid #000;
+        }
+        iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Embedded Video System</h1>
+    <div id="container">
+        <iframe id="embeddedSite"></iframe>
+    </div>
+
+    <script>
+        function getUrlParameter(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
+        }
+
+        // Load the embedded site from URL parameters
+        window.onload = function () {
+            const embedUrl = getUrlParameter('url') || "https://www.example.com"; // Default site
+            document.getElementById('embeddedSite').src = embedUrl;
+
+            // Get position values from URL parameters (default to 0)
+            const left = parseInt(getUrlParameter('left')) || 0;
+            const right = parseInt(getUrlParameter('right')) || 0;
+            const up = parseInt(getUrlParameter('up')) || 0;
+            const down = parseInt(getUrlParameter('down')) || 0;
+
+            // Apply position adjustments
+            const iframe = document.getElementById('embeddedSite');
+            iframe.style.left = (right - left) + "px";
+            iframe.style.top = (down - up) + "px";
+        };
+    </script>
+
+</body>
+</html>
