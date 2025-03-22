@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: transparent; }
-        input, button { display: block; margin: 10px auto; padding: 10px; border: none; outline: none; background: transparent; }
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: transparent; color: white; }
+        input, button { display: block; margin: 10px auto; padding: 10px; border: none; outline: none; background: transparent; color: white; }
+        input::placeholder { color: rgba(255, 255, 255, 0.7); }
     </style>
 </head>
 <body>
-    <h2>Login</h2>
+   
     <input type="text" id="mobile" placeholder="Enter Mobile Number">
     <button onclick="checkMobile()">Next</button>
 
@@ -22,7 +23,7 @@
     <script src="data.js"></script>
     <script>
         if (localStorage.getItem("loggedInUser")) {
-            window.location.href = "abc.xyz";
+            window.location.href = "https://abc.xyz";
         }
 
         function checkMobile() {
