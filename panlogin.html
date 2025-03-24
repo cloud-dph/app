@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with PAN</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: transparent; color: white; }
+        input, button { display: block; margin: 10px auto; padding: 10px; border: none; outline: none; background: transparent; color: white; }
+        input::placeholder { color: rgba(255, 255, 255, 0.7); }
+    </style>
+</head>
+<body>
+    <h2>Login with PAN</h2>
+    <input type="text" id="pan" placeholder="Enter PAN ID">
+    <button onclick="loginWithPAN()">Login</button>
+
+    <script src="data.js"></script>
+    <script>
+        function loginWithPAN() {
+            let pan = document.getElementById("pan").value.toUpperCase();
+            let foundUser = Object.entries(users).find(([_, data]) => data.pan === pan);
+
+            if (foundUser) {
+                localStorage.setItem("loggedInPAN", pan); // ✅ Store the PAN ID for profile
+                window.location.href = "https://google.com"; // ✅ Redirect to Google
+            } else {
+                alert("PAN ID not found!");
+            }
+        }
+    </script>
+</body>
+</html>
