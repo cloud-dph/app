@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <script src="data.js"></script>  <!-- Load the user data -->
+    <script src="data.js"></script>  <!-- Load user data -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,7 +83,11 @@
             if (currentUser && passwordInput === currentUser.password) {
                 document.getElementById("message").textContent = `Welcome, ${currentUser.name}! Redirecting...`;
                 setTimeout(() => {
-                    window.location.href = "https://abc.xyz"; // Redirect to the given URL
+                    if (currentUser.subscription === "yes") {
+                        window.location.href = "https://abc.xyz"; // Redirect to abc.xyz if subscribed
+                    } else {
+                        window.location.href = "https://tata.com"; // Redirect to tata.com if not subscribed
+                    }
                 }, 2000); // Delay of 2 seconds before redirect
             } else {
                 document.getElementById("message").textContent = "Incorrect password!";
