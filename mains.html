@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <script src="data.js"></script>  <!-- Load the user data -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            text-align: center;
+            width: 300px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <div id="mobileStep">
+            <input type="text" id="mobile" placeholder="Enter Mobile Number">
+            <button onclick="checkMobile()">Next</button>
+        </div>
+
+        <div id="passwordStep" class="hidden">
+            <input type="password" id="password" placeholder="Enter Password">
+            <button onclick="checkPassword()">Login</button>
+        </div>
+
+        <p id="message"></p>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        function checkMobile() {
+            const mobileInput = document.getElementById("mobile").value.trim();
+            if (users[mobileInput]) {
+                currentUser = users[mobileInput];
+                document.getElementById("mobileStep").classList.add("hidden");
+                document.getElementById("passwordStep").classList.remove("hidden");
+            } else {
+                document.getElementById("message").textContent = "Mobile number not found!";
+            }
+        }
+
+        function checkPassword() {
+            const passwordInput = document.getElementById("password").value;
+            if (currentUser && passwordInput === currentUser.password) {
+                document.getElementById("message").textContent = `Welcome, ${currentUser.name}! Redirecting...`;
+                setTimeout(() => {
+                    window.location.href = "https://abc.xyz"; // Redirect to the given URL
+                }, 2000); // Delay of 2 seconds before redirect
+            } else {
+                document.getElementById("message").textContent = "Incorrect password!";
+            }
+        }
+    </script>
+
+</body>
+</html>
