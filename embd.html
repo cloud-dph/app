@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Embed Website with Overlay</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        #embeddedWebsite {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: relative;
+        }
+
+        #framerOverlay {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* Allows clicks to pass through to the embedded site */
+        }
+    </style>
+</head>
+<body>
+    <iframe id="embeddedWebsite" src=""></iframe>
+    <iframe id="framerOverlay" src="https://sustained-surface-128991.framer.app/"></iframe>
+
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(window.location.href);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        var websiteUrl = getUrlParameter('website');
+        if (websiteUrl) {
+            document.getElementById('embeddedWebsite').src = websiteUrl;
+        }
+    </script>
+</body>
+</html>
