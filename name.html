@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: transparent; color: white; }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            border-radius: 50%;
+            margin: 10px auto;
+        }
+        a { color: lightblue; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h2>Profile</h2>
+    <div id="profile"></div>
+    <a href="logout.html">Logout</a>
+
+    <script src="data.js"></script>
+    <script>
+        let userMobile = localStorage.getItem("loggedInUser");
+        if (!userMobile) {
+            window.location.href = "index.html";
+        }
+
+        let userData = users[userMobile];
+        if (userData) {
+            let firstLetter = userData.name.charAt(0).toUpperCase();
+            document.getElementById("profile").innerHTML = `
+                
+                <p>Name: ${userData.name}</p>
+                
+               
+            `;
+        }
+    </script>
+</body>
+</html>
