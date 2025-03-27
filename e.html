@@ -1,36 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Embed Website with Overlay</title>
+    <title>Framer App with URL Parameter</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden; /* Prevent scrollbars */
+            overflow: hidden;
         }
 
-        #embeddedWebsite {
+        #framerApp {
             width: 100%;
             height: 100%;
             border: none;
-            position: relative;
-        }
-
-        #framerOverlay {
-            width: 100%;
-            height: 100%;
-            border: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none; /* Allows clicks to pass through to the embedded site */
         }
     </style>
 </head>
 <body>
-    <iframe id="embeddedWebsite" src=""></iframe>
-    <iframe id="framerOverlay" src="https://sustained-surface-128991.framer.app/"></iframe>
+    <iframe id="framerApp" src="https://sustained-surface-128991.framer.app/"></iframe>
 
     <script>
         function getUrlParameter(name) {
@@ -43,8 +31,10 @@
         }
 
         var websiteUrl = getUrlParameter('website');
+
+        // Send the URL parameter to the Framer app
         if (websiteUrl) {
-            document.getElementById('embeddedWebsite').src = websiteUrl;
+            document.getElementById('framerApp').src = "https://sustained-surface-128991.framer.app/?website=" + encodeURIComponent(websiteUrl);
         }
     </script>
 </body>
