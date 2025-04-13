@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: transparent; color: white; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background: transparent;
+            color: white;
+        }
         .avatar {
             width: 100px;
             height: 100px;
@@ -18,7 +24,10 @@
             border-radius: 50%;
             margin: 10px auto;
         }
-        a { color: lightblue; text-decoration: none; }
+        a {
+            color: lightblue;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -28,21 +37,42 @@
 
     <script src="data.js"></script>
     <script>
-        let userMobile = localStorage.getItem("loggedInUser");
+        // Get color and size from URL
+        const params = new URLSearchParams(window.location.search);
+        const color = params.get("color") || "white"; // supports hex like %23fff
+        const size = params.get("size") || "16px";    // supports px like 30px
+
+        // Get user from localStorage
+        const userMobile = localStorage.getItem("loggedInUser");
         if (!userMobile) {
             window.location.href = "index.html";
         }
 
-        let userData = users[userMobile];
+        // Fetch user data
+        const userData = users[userMobile];
         if (userData) {
-            let firstLetter = userData.name.charAt(0).toUpperCase();
-            document.getElementById("profile").innerHTML = `
-           
-                <p> ${userData.name}</p>
-                
-            `;
+            const profileDiv = document.getElementById("profile");
+
+            // Truncate long names
+            let displayName = userData.name;
+            if (displayName.length > 6) {
+                displayName = displayName.substring(0, 6) + "...";
+            }
+
+            // Create element
+            const nameElement = document.createElement("p");
+            nameElement.textContent = displayName;
+            nameElement.style.color = color;
+            nameElement.style.fontSize = size;
+
+            // Optional: show full name on hover
+            nameElement.title = userData.name;
+
+            profileDiv.appendChild(nameElement);
+        } else {
+            alert("User data not found. Please log in again.");
+            window.location.href = "index.html";
         }
     </script>
 </body>
 </html>
-
