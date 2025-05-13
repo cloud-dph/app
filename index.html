@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Upload Image URL</title>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    input, button { padding: 10px; font-size: 16px; margin-top: 10px; }
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    input, button { padding: 10px; font-size: 16px; width: 100%; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <h2>Enter Image URL</h2>
-  <input type="text" id="imageUrlInput" placeholder="https://example.com/image.jpg" />
-  <br>
+  <h2>Upload Image by URL</h2>
+  <input type="text" id="imageUrlInput" placeholder="Enter image URL (https://...)" />
   <button onclick="uploadImage()">Upload</button>
 
   <script>
@@ -32,18 +32,16 @@
     async function uploadImage() {
       const url = document.getElementById('imageUrlInput').value.trim();
       if (!url) {
-        alert("Please enter an image URL");
+        alert("Please enter an image URL.");
         return;
       }
 
-      const imageRef = db.collection('images').doc('latest');
-
       try {
-        await imageRef.set({ url }); // Replace the old one
-        alert("Image uploaded successfully!");
+        await db.collection("images").doc("latest").set({ url });
+        alert("Image uploaded successfully.");
       } catch (error) {
-        console.error("Error uploading image:", error);
-        alert("Failed to upload image.");
+        console.error("Error uploading:", error);
+        alert("Upload failed.");
       }
     }
   </script>
