@@ -1,17 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Display Image</title>
+  <meta charset="UTF-8">
+  <title>Image</title>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    body { text-align: center; font-family: Arial; margin-top: 50px; }
-    img { max-width: 90%; height: auto; border: 1px solid #ccc; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    img {
+      width: 370px;
+      height: 400px;
+      object-fit: cover;
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <h2>Latest Uploaded Image</h2>
-  <div id="imageContainer">Loading...</div>
+  <div id="imageContainer"></div>
 
   <script>
     const firebaseConfig = {
@@ -31,11 +44,10 @@
 
     imageRef.onSnapshot((doc) => {
       const container = document.getElementById('imageContainer');
-      if (doc.exists) {
-        const data = doc.data();
-        container.innerHTML = `<img src="${data.url}" alt="Uploaded Image">`;
+      if (doc.exists && doc.data().url) {
+        container.innerHTML = `<img src="${doc.data().url}" alt="Image">`;
       } else {
-        container.innerText = "No image found.";
+        container.innerHTML = '';
       }
     });
   </script>
