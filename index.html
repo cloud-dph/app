@@ -1,51 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: transparent; color: white; }
-        input, button { display: block; margin: 10px auto; padding: 10px; border: none; outline: none; background: transparent; color: white; }
-        input::placeholder { color: rgba(255, 255, 255, 0.7); }
-    </style>
+  <title>Upload Image URL</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, button { padding: 10px; font-size: 16px; margin-top: 10px; }
+  </style>
 </head>
 <body>
-   
-    <input type="text" id="mobile" placeholder="Enter Mobile Number">
-    <button onclick="checkMobile()">Next</button>
+  <h2>Enter Image URL</h2>
+  <input type="text" id="imageUrlInput" placeholder="https://example.com/image.jpg" />
+  <br>
+  <button onclick="uploadImage()">Upload</button>
 
-    <div id="passwordSection" style="display: none;">
-        <input type="password" id="password" placeholder="Enter Password">
-        <button onclick="login()">Login</button>
-    </div>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvKhzHTcSmj3Z64oePRGP2TeEd_5A4RVU",
+      authDomain: "authentication-c6c71.firebaseapp.com",
+      projectId: "authentication-c6c71",
+      storageBucket: "authentication-c6c71.appspot.com",
+      messagingSenderId: "707906547881",
+      appId: "1:707906547881:web:55c67cf3e7e867951c39b8",
+      measurementId: "G-ZKY9SXX8N8"
+    };
 
-    <script src="data.js"></script>
-    <script>
-        if (localStorage.getItem("loggedInUser")) {
-            window.location.href = "https://abc.xyz";
-        }
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        function checkMobile() {
-            let mobile = document.getElementById("mobile").value;
-            if (users[mobile]) {
-                document.getElementById("passwordSection").style.display = "block";
-            } else {
-                alert("User not found!");
-            }
-        }
+    async function uploadImage() {
+      const url = document.getElementById('imageUrlInput').value.trim();
+      if (!url) {
+        alert("Please enter an image URL");
+        return;
+      }
 
-        function login() {
-            let mobile = document.getElementById("mobile").value;
-            let password = document.getElementById("password").value;
+      const imageRef = db.collection('images').doc('latest');
 
-            if (users[mobile] && users[mobile].password === password) {
-                localStorage.setItem("loggedInUser", mobile);
-                window.location.href = "abc.xyz";
-            } else {
-                alert("Incorrect password!");
-            }
-        }
-    </script>
+      try {
+        await imageRef.set({ url }); // Replace the old one
+        alert("Image uploaded successfully!");
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        alert("Failed to upload image.");
+      }
+    }
+  </script>
 </body>
 </html>
