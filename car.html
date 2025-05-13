@@ -2,13 +2,12 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Image</title>
+  <title>Latest Image</title>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
     body {
       margin: 0;
-      padding: 0;
       background: #000;
       display: flex;
       align-items: center;
@@ -40,14 +39,14 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const imageRef = db.collection('images').doc('latest');
+    const imageRef = db.collection("images").doc("latest");
 
     imageRef.onSnapshot((doc) => {
-      const container = document.getElementById('imageContainer');
+      const container = document.getElementById("imageContainer");
       if (doc.exists && doc.data().url) {
         container.innerHTML = `<img src="${doc.data().url}" alt="Image">`;
       } else {
-        container.innerHTML = '';
+        container.innerHTML = "";
       }
     });
   </script>
