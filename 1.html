@@ -1,1 +1,211 @@
-<name></name>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movie Preview</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #0f0f0f;
+      font-family: sans-serif;
+      color: white;
+    }
+
+    .trailer {
+      background-color: black;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: gray;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .title-logo {
+      width: 220px;
+      margin: 10px 0;
+    }
+
+    .meta {
+      color: gray;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    .watch-now {
+      background-color: white;
+      color: black;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 10px;
+      width: 90%;
+      margin: 20px auto;
+      display: block;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .tags {
+      color: white;
+      margin: 15px 0;
+    }
+
+    .description {
+      color: gray;
+      font-size: 14px;
+      line-height: 1.4em;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .actions div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+    }
+
+    .actions div i {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .more-like-this {
+      padding: 20px;
+      font-size: 18px;
+      color: white;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background-color: #0f0f0f;
+      padding: 10px 0;
+      border-top: 1px solid #222;
+    }
+
+    .nav div {
+      color: gray;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nav i {
+      font-size: 20px;
+    }
+  </style>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="trailer">TRAILER</div>
+
+  <div class="content">
+    <img id="logo" class="title-logo" alt="Logo" />
+    <div class="meta" id="meta-info"></div>
+
+    <a id="watchBtn" class="watch-now">▶ Watch Now</a>
+
+    <div class="tags" id="genres"></div>
+
+    <div class="description" id="description"></div>
+
+    <div class="actions">
+      <div onclick="addToWatchlist()">
+        <i class="fas fa-plus-circle"></i>
+        Watchlist
+      </div>
+      <div>
+        <i class="fas fa-share-alt"></i>
+        Share
+      </div>
+      <div>
+        <i class="fas fa-download"></i>
+        Download
+      </div>
+      <div>
+        <i class="fas fa-heart"></i>
+        Rate
+      </div>
+    </div>
+  </div>
+
+  <div class="more-like-this">More Like This</div>
+
+  <div class="nav">
+    <div><i class="fas fa-home"></i>Home</div>
+    <div><i class="fas fa-search"></i>Search</div>
+    <div><i class="fas fa-bolt"></i>Sparks</div>
+    <div><i class="fas fa-download"></i>Downloads</div>
+    <div><i class="fas fa-user-circle"></i>My Space</div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBROgYUR-2rakUxHbl90JlynP_X3f0GxIM",
+      authDomain: "diseny-plus-hotstar-database.firebaseapp.com",
+      projectId: "diseny-plus-hotstar-database",
+      storageBucket: "diseny-plus-hotstar-database.firebasestorage.app",
+      messagingSenderId: "582861150339",
+      appId: "1:582861150339:web:0d2b69a2ae914342b723b6",
+      measurementId: "G-HX223WNVKE"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieId = urlParams.get("id"); // ID is the document ID
+
+    let movieData = null;
+
+    if (movieId) {
+      db.collection("movies").doc(movieId).get().then(doc => {
+        if (doc.exists) {
+          movieData = doc.data();
+          document.getElementById("logo").src = movieData.logoUrl;
+          document.getElementById("description").textContent = movieData.description;
+          document.getElementById("genres").textContent = movieData.genres;
+          document.getElementById("watchBtn").href = movieData.redirectUrl;
+          document.getElementById("meta-info").textContent = `2021 • U/A 13+ • 2h 8m • Hindi`;
+        } else {
+          alert("Movie not found.");
+        }
+      });
+    }
+
+    function addToWatchlist() {
+      if (!movieData) return;
+      const watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+      if (watchlist.find(item => item.Name === movieData.Name)) {
+        alert("Already in watchlist.");
+        return;
+      }
+      watchlist.push(movieData);
+      localStorage.setItem("watchlist", JSON.stringify(watchlist));
+      alert("Added to watchlist.");
+    }
+  </script>
+</body>
+</html>
