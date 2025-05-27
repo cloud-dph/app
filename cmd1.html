@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up - Navsara</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2em; background: #f8f8fa; }
+    form { margin: 1em 0; padding: 1em; background: #fff; border-radius: 8px; max-width: 400px; }
+    input, select { width: 100%; padding: 0.5em; margin: 0.5em 0 1em; }
+    button { padding: 0.6em 1.2em; background: #2d7ff9; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    #message { color: red; }
+  </style>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvKhzHTcSmj3Z64oePRGP2TeEd_5A4RVU",
+      authDomain: "authentication-c6c71.firebaseapp.com",
+      databaseURL: "https://authentication-c6c71-default-rtdb.firebaseio.com",
+      projectId: "authentication-c6c71",
+      storageBucket: "authentication-c6c71.firebasestorage.app",
+      messagingSenderId: "707906547881",
+      appId: "1:707906547881:web:55c67cf3e7e867951c39b8",
+      measurementId: "G-ZKY9SXX8N8"
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+    function navidKey(navid) { return navid.replace(/\./g, ','); }
+  </script>
+</head>
+<body>
+  <h2>Sign Up for Navsara</h2>
+  <form id="signup-form" autocomplete="off">
+    <label for="first-name">First Name</label>
+    <input type="text" id="first-name" required>
+    <label for="last-name">Last Name (optional)</label>
+    <input type="text" id="last-name">
+    <label for="dob">Date of Birth</label>
+    <input type="date" id="dob" required>
+    <label for="gender">Gender</label>
+    <select id="gender" required>
+      <option value="">Select</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+      <option>Prefer not to say</option>
+    </select>
+    <label for="signup-navid">Choose your NavID</label>
+    <input type="email" id="signup-navid" required pattern=".+@navsara\.com$" placeholder="yourid@navsara.com">
+    <label for="signup-password">Password</label>
+    <input type="password" id="signup-password" required>
+    <label for="signup-password2">Confirm Password</label>
+    <input type="password" id="signup-password2" required>
+    <button type="submit" id="submit-btn">Sign Up</button>
+    <div id="message"></div>
+  </form>
+  <script>
+    const signupForm = document.getElementById('signup-form');
+    const message = document.getElementById('message');
+    const submitBtn = document.getElementById('submit-btn');
+    signupForm.onsubmit = function(e) {
+      e.preventDefault();
+      message.textContent = '';
+      submitBtn.disabled = true;
+      // Read form values
+      const firstName = document.getElementById('first-name').value.trim();
+      const lastName = document.getElementById('last-name').value.trim();
+      const dob = document.getElementById('dob').value;
+      const gender = document.getElementById('gender').value;
+      const navid = document.getElementById('signup-navid').value.trim().toLowerCase();
+      const password = document.getElementById('signup-password').value;
+      const password2 = document.getElementById('signup-password2').value;
+      // Validation
+      if (!navid.endsWith('@navsara.com')) {
+        message.textContent = 'NavID must end with @navsara.com';
+        submitBtn.disabled = false;
+        return;
+      }
+      if (password !== password2) {
+        message.textContent = 'Passwords do not match.';
+        submitBtn.disabled = false;
+        return;
+      }
+      if (!firstName || !dob || !gender || !navid || !password) {
+        message.textContent = 'Please fill all required fields.';
+        submitBtn.disabled = false;
+        return;
+      }
+      // Check uniqueness
+      db.ref('users/' + navidKey(navid)).once('value').then(snapshot => {
+        if (snapshot.exists()) {
+          message.textContent = 'This NavID is already registered.';
+          submitBtn.disabled = false;
+        } else {
+          const userObj = { firstName, lastName, dob, gender, password };
+          console.log("Attempting to save user:", userObj, navid); // Debug line
+          db.ref('users/' + navidKey(navid)).set(userObj, function(error) {
+            if (error) {
+              console.error(error); // Debug line
+              message.textContent = 'Failed to sign up. Please try again.';
+              submitBtn.disabled = false;
+            } else {
+              sessionStorage.setItem('navid', navid);
+              window.location.href = "profile.html";
+            }
+          });
+        }
+      }).catch(err => {
+        message.textContent = "Network error. Please try again.";
+        console.error(err);
+        submitBtn.disabled = false;
+      });
+    };
+  </script>
+</body>
+</html>
