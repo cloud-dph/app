@@ -2,19 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sign Up - Navsara</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 2em; background: #f8f8fa; }
-    form { margin: 1em 0; padding: 1em; background: #fff; border-radius: 8px; max-width: 400px; }
-    input, select { width: 100%; padding: 0.5em; margin: 0.5em 0 1em; }
-    button { padding: 0.6em 1.2em; background: #2d7ff9; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-    #message { color: red; }
-  </style>
+  <title>Sign In - Navsara</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <style>
+    html, body { height: 100%; margin: 0; background: #f5f5f5; font-family: 'Roboto', Arial, sans-serif; }
+    .centered-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .login-card { background: #fff; border-radius: 10px; box-shadow: 0 4px 24px rgba(60,64,67,.18); max-width: 410px; width: 100%; padding: 40px 36px 32px 36px; display: flex; flex-direction: column; align-items: center; }
+    .google-logo { width: 75px; margin-bottom: 12px; }
+    .login-title { font-size: 24px; font-weight: 500; color: #202124; margin-bottom: 8px; text-align: center; }
+    .login-sub { color: #5f6368; font-size: 16px; margin-bottom: 26px; text-align: center; }
+    form { width: 100%; margin: 0; display: flex; flex-direction: column; gap: 15px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .input-label { font-size: 13px; color: #5f6368; font-weight: 500; margin-bottom: 2px; }
+    .input-field { font-size: 16px; padding: 10px 12px; border: 1px solid #dadce0; border-radius: 4px; outline: none; transition: border 0.2s; background: #fafafa; }
+    .input-field:focus { border: 2px solid #1a73e8; background: #fff; }
+    .split-email { display: flex; align-items: center; gap: 0; }
+    .split-email input { flex: 1 1 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: none; }
+    .split-domain { padding: 10px 12px; background: #eee; border: 1px solid #dadce0; border-left: none; border-radius: 0 4px 4px 0; font-size: 16px; color: #5f6368; min-width: 110px; user-select: none; }
+    .error-msg { color: #d93025; font-size: 13px; min-height: 20px; margin-top: 2px; margin-bottom: -5px; }
+    .login-btn { margin-top: 16px; background: #1a73e8; color: #fff; font-size: 16px; font-weight: 500; border: none; border-radius: 4px; padding: 10px 0; cursor: pointer; transition: box-shadow .15s; box-shadow: 0 1px 2px rgba(60,64,67,.08); }
+    .login-btn:active { background: #1765c1; }
+    .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .signup-link { margin-top: 18px; text-align: center; font-size: 14px; }
+    .signup-link a { color: #1a73e8; text-decoration: none; font-weight: 500; }
+    .signup-link a:hover { text-decoration: underline; }
+    .loader { border: 3px solid #f3f3f3; border-top: 3px solid #1a73e8; border-radius: 50%; width: 22px; height: 22px; animation: spin 1s linear infinite; margin: 0 auto; margin-top: 10px; }
+    @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+    @media (max-width: 500px) { .login-card { padding: 26px 8px 18px 8px; max-width: 98vw; } }
+  </style>
+</head>
+<body>
+  <div class="centered-container">
+    <div class="login-card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="google-logo" alt="Google logo">
+      <div class="login-title">Sign in</div>
+      <div class="login-sub">to continue to Navsara</div>
+      <form id="login-form" autocomplete="off" spellcheck="false">
+        <div class="form-group">
+          <label class="input-label" for="login-navid">NavID</label>
+          <div class="split-email">
+            <input type="text" class="input-field" id="login-navid" required pattern="[a-zA-Z0-9._%+-]{2,}" placeholder="yourid" maxlength="32" autocomplete="username">
+            <span class="split-domain">@navsara.com</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="input-label" for="login-password">Password</label>
+          <input type="password" class="input-field" id="login-password" required autocomplete="current-password">
+        </div>
+        <div class="error-msg" id="message"></div>
+        <button type="submit" class="login-btn" id="submit-btn">Sign In</button>
+        <div id="loader" class="loader" style="display:none;"></div>
+      </form>
+      <div class="signup-link">
+        Don't have an account? <a href="signup.html">Create account</a>
+      </div>
+    </div>
+  </div>
   <script>
-    // Your Firebase configuration
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDvKhzHTcSmj3Z64oePRGP2TeEd_5A4RVU",
       authDomain: "authentication-c6c71.firebaseapp.com",
@@ -30,91 +80,48 @@
     }
     const db = firebase.database();
     function navidKey(navid) { return navid.replace(/\./g, ','); }
-  </script>
-</head>
-<body>
-  <h2>Sign Up for Navsara</h2>
-  <form id="signup-form" autocomplete="off">
-    <label for="first-name">First Name</label>
-    <input type="text" id="first-name" required>
-    <label for="last-name">Last Name (optional)</label>
-    <input type="text" id="last-name">
-    <label for="dob">Date of Birth</label>
-    <input type="date" id="dob" required>
-    <label for="gender">Gender</label>
-    <select id="gender" required>
-      <option value="">Select</option>
-      <option>Male</option>
-      <option>Female</option>
-      <option>Other</option>
-      <option>Prefer not to say</option>
-    </select>
-    <label for="signup-navid">Choose your NavID</label>
-    <input type="email" id="signup-navid" required pattern=".+@navsara\.com$" placeholder="yourid@navsara.com">
-    <label for="signup-password">Password</label>
-    <input type="password" id="signup-password" required>
-    <label for="signup-password2">Confirm Password</label>
-    <input type="password" id="signup-password2" required>
-    <button type="submit" id="submit-btn">Sign Up</button>
-    <div id="message"></div>
-  </form>
-  <script>
-    const signupForm = document.getElementById('signup-form');
+
+    // Elements
+    const loginForm = document.getElementById('login-form');
     const message = document.getElementById('message');
     const submitBtn = document.getElementById('submit-btn');
-    signupForm.onsubmit = function(e) {
+    const loader = document.getElementById('loader');
+
+    loginForm.onsubmit = function(e) {
       e.preventDefault();
       message.textContent = '';
       submitBtn.disabled = true;
-      // Read form values
-      const firstName = document.getElementById('first-name').value.trim();
-      const lastName = document.getElementById('last-name').value.trim();
-      const dob = document.getElementById('dob').value;
-      const gender = document.getElementById('gender').value;
-      const navid = document.getElementById('signup-navid').value.trim().toLowerCase();
-      const password = document.getElementById('signup-password').value;
-      const password2 = document.getElementById('signup-password2').value;
-      // Validation
-      if (!navid.endsWith('@navsara.com')) {
-        message.textContent = 'NavID must end with @navsara.com';
-        submitBtn.disabled = false;
+      loader.style.display = 'block';
+      // Gather & trim values
+      const navidPart = document.getElementById('login-navid').value.trim().toLowerCase();
+      const navid = navidPart + "@navsara.com";
+      const password = document.getElementById('login-password').value;
+      if (!/^[a-zA-Z0-9._%+-]{2,}$/.test(navidPart)) {
+        showError('Enter a valid NavID');
         return;
       }
-      if (password !== password2) {
-        message.textContent = 'Passwords do not match.';
-        submitBtn.disabled = false;
-        return;
-      }
-      if (!firstName || !dob || !gender || !navid || !password) {
-        message.textContent = 'Please fill all required fields.';
-        submitBtn.disabled = false;
-        return;
-      }
-      // Check uniqueness
       db.ref('users/' + navidKey(navid)).once('value').then(snapshot => {
-        if (snapshot.exists()) {
-          message.textContent = 'This NavID is already registered.';
-          submitBtn.disabled = false;
+        if (!snapshot.exists()) {
+          showError('This NavID is not registered. <a href="signup.html">Create an account?</a>');
         } else {
-          const userObj = { firstName, lastName, dob, gender, password };
-          console.log("Attempting to save user:", userObj, navid); // Debug line
-          db.ref('users/' + navidKey(navid)).set(userObj, function(error) {
-            if (error) {
-              console.error(error); // Debug line
-              message.textContent = 'Failed to sign up. Please try again.';
-              submitBtn.disabled = false;
-            } else {
-              sessionStorage.setItem('navid', navid);
-              window.location.href = "profile.html";
-            }
-          });
+          const user = snapshot.val();
+          if (user.password === password) {
+            sessionStorage.setItem('navid', navid);
+            window.location.href = "profile.html";
+          } else {
+            showError('Incorrect password.');
+          }
         }
       }).catch(err => {
-        message.textContent = "Network error. Please try again.";
-        console.error(err);
-        submitBtn.disabled = false;
+        showError("Network error. Please try again.");
       });
     };
+
+    function showError(msg) {
+      message.innerHTML = msg;
+      submitBtn.disabled = false;
+      loader.style.display = 'none';
+    }
   </script>
 </body>
 </html>
